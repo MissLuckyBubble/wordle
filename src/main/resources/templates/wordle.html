@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+.Wordle {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.Wordle-Message {
+	text-align: center;
+}
+
+.Wordle-Message > a {
+	display: block;
+	font-size: 1.2rem;
+}
+
+.Wordle-Match {
+	color: white;
+	text-align: center;
+	text-transform: uppercase;
+	padding: 0.2rem 0;
+	width: 2.4rem;
+	display: inline-block;
+	margin: 0.1rem;
+	font-size: 2rem;
+	border: 1px solid #787c7e
+}
+
+.Wordle-Match_U {
+	color: #787c7e;
+}
+
+.Wordle-Match_N {
+	background-color: #787c7e;
+}
+
+.Wordle-Match_P {
+	background-color: #6aaa64;
+	border-color: #6aaa64;
+}
+
+.Wordle-Match_L {
+	background-color: #c9b458;
+	border-color: #c9b458;
+}
+
+.Wordle-LettersStat {
+	display: flex;
+	width: 29rem;
+	flex-wrap: wrap;
+}
+
+.Wordle form input {
+	width: 13rem;
+}
+</style>
+</head>
+<body>
+	<div class="Wordle">
+<!-- 		<h1 class="Wordle-Message">Браво! Позна думата с 5 опита 🎉 -->
+<!-- 			<a href="/">Играй отновo</a> -->
+<!-- 		</h1> -->
+<!-- 		<h1 class="Wordle-Message">Жалко! Не успя да познаеш думата 😢 -->
+<!-- 			<a href="/">Опитай пак</a> -->
+<!-- 		</h1> -->
+		<h1 th:if="${error}" th:text="${error}">Невалидна дума</h1>
+		<form method="post" th:action="@{/games/{gameId}/guesses(gameId=${game.id})}">
+			<div th:each="guess: ${game.guesses}">
+				<div>
+					<span 
+						class="Wordle-Match"
+						th:each="char: ${guess.word.toCharArray()}"
+						th:text="${char}" 
+						th:classappend="${'Wordle-Match_' + guess.matches.charAt(charStat.index)}">a</span>
+				</div>
+			</div>
+			<input name="guess" maxlength="5" autofocus/>
+			<button>Check</button>
+		</form>
+		<div>
+			<h3>Статистика за използваните букви:</h3>
+			<div class="Wordle-LettersStat">
+				<span 
+					class="Wordle-Match"
+					th:each="char: ${game.alphabet.toCharArray()}"
+					th:text="${char}" 
+					th:classappend="${'Wordle-Match_' + game.alphabetMatches.charAt(charStat.index)}">a</span>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
