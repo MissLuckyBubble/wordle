@@ -45,13 +45,23 @@ public class GameServiceImpl implements GameService {
   public Game makeGuess(String id, String word) {
     var game = getGame(id);
     if (!wordRepo.exists(word)) throw new UnknownWordException(word);
+    if (game.getGuesses().size()>=game.getMaxGuesses()){
 
+    }
     var guess = new Guess();
     guess.setWord(word);
     guess.setMadeAt(LocalDateTime.now());
     guess.setMatches(findMatches(game.getWord(), word));
     game.getGuesses().add(guess);
     updateAlphabetMatches(game);
+    if(game.getWord().equals(word)){
+      game.setWin(true);
+      return game;
+    }
+    if(game.getGuesses().size()>=game.getMaxGuesses()){
+      game.setLose(true);
+      return game;
+    }
     return game;
   }
 
@@ -92,7 +102,6 @@ public class GameServiceImpl implements GameService {
         }
       }
     }
-
     return match;
   }
 }

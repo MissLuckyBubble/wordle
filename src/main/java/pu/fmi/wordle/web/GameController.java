@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pu.fmi.wordle.logic.GameService;
 import pu.fmi.wordle.logic.UnknownWordException;
 
+import java.util.Arrays;
+
 @Controller
 @RequestMapping("/games")
 public class GameController {
@@ -31,7 +33,14 @@ public class GameController {
   @GetMapping("/{gameId}")
   public String showGame(@PathVariable String gameId, Model model) {
     var game = gameService.getGame(gameId);
+    model.addAttribute("word",game.getWord());
     model.addAttribute("game", game);
+    if(game.getLose()==true){
+      model.addAttribute("lose","Жалко! Не успя да познаеш думата! Думата беше: " + game.getWord());
+    }
+    if( game.getWin()==true){
+      model.addAttribute("win","Браво! Позна думата с " + game.getGuesses().size() + " опита!");
+    }
     return "wordle";
   }
 
@@ -43,7 +52,7 @@ public class GameController {
     } catch (UnknownWordException e) {
       var game = gameService.getGame(gameId);
       model.addAttribute("game", game);
-      model.addAttribute("error", format("[%s] word doesn't exist", guess));
+      model.addAttribute("error", format(" Тази дума не същестува в базата данни: %s", guess));
       return "wordle";
     }
   }

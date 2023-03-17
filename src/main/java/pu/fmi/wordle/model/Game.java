@@ -10,6 +10,8 @@ public class Game {
   LocalDateTime startedOn;
   String alphabet = "абвгдежзийклмнопрстуфхцчшщъьюя";
   String alphabetMatches;
+  Boolean win = false;
+  Boolean lose = false;
 
   int maxGuesses = 6;
   List<Guess> guesses;
@@ -68,5 +70,21 @@ public class Game {
 
   public void setAlphabetMatches(String alphabetMatches) {
     this.alphabetMatches = alphabetMatches;
+  }
+
+  public Boolean getWin() {
+    return win;
+  }
+
+  public void setWin(Boolean win) {
+    this.win = win;
+  }
+
+  public Boolean getLose() {
+    return lose;
+  }
+
+  public void setLose(Boolean lose) {
+    this.lose = lose;
   }
 }
