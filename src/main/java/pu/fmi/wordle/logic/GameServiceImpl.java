@@ -2,10 +2,10 @@ package pu.fmi.wordle.logic;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.stereotype.Service;
 import pu.fmi.wordle.model.Game;
 import pu.fmi.wordle.model.Game.GameState;
@@ -115,9 +115,20 @@ public class GameServiceImpl implements GameService {
   public Collection<Game> listLast10() {
     // TODO: Use the newly created method in GameRepository to find all ONGOING games started before
     // 24 hours and update the status to LOSS
+    Collection<Game> all_games = gameRepo.findAll();
 
-    // TODO: Switch to renamed method in GameRepository to find the last 10 finished (not ONGOING)
-    // games ordered by startedOn descending
-    return gameRepo.findByStateNot(GameState.ONGOING);
+    for (Game game : all_games) {
+      if(game.getState()==GameState.ONGOING &&  game.getStartedOn().isBefore(LocalDateTime.now().minusHours(24)) ){
+        game.setState(GameState.LOSS);
+      }
+    }
+
+    Collection<Game> completedGames = gameRepo.findByStateNot(GameState.ONGOING);
+    List<Game> sortedGames = completedGames.stream()
+            .sorted((game1, game2) -> game2.getStartedOn().compareTo(game1.getStartedOn()))
+            .collect(Collectors.toList());
+
+    List<Game> last10Games = sortedGames.subList(0, Math.min(sortedGames.size(), 10));
+    return Collections.unmodifiableCollection(last10Games);
   }
 }

@@ -1,6 +1,8 @@
 package pu.fmi.wordle.model;
 
 import java.util.Collection;
+import java.util.Comparator;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import pu.fmi.wordle.model.Game.GameState;
 
