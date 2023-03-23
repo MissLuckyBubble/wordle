@@ -1,8 +1,12 @@
 package pu.fmi.wordle.logic;
 
+import java.util.Collection;
+
 import pu.fmi.wordle.model.Game;
 
 public interface GameService {
+
+  Collection<Game> listLast10();
 
   Game startNewGame();
 

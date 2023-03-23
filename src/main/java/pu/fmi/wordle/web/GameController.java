@@ -35,12 +35,6 @@ public class GameController {
     var game = gameService.getGame(gameId);
     model.addAttribute("word",game.getWord());
     model.addAttribute("game", game);
-    if(game.getLose()==true){
-      model.addAttribute("lose","Жалко! Не успя да познаеш думата! Думата беше: " + game.getWord());
-    }
-    if( game.getWin()==true){
-      model.addAttribute("win","Браво! Позна думата с " + game.getGuesses().size() + " опита!");
-    }
     return "wordle";
   }
 

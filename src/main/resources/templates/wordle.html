@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Wordle</title>
+    <title>Insert title here</title>
     <style type="text/css">
         .Wordle {
             height: 100vh;
@@ -63,17 +63,15 @@
     </style>
 </head>
 <body>
-
-
 <div class="Wordle">
-    <div class="Wordle-Message" th:if="${game.getWin()}">
-		<h1 class="Wordle-Message" th:text="${win}"></h1>
-        <h1 class="Wordle-Message"><a href="/">Играй отновo</a></h1>
-    </div>
-    <div  class="Wordle-Message" th:if="${game.getLose()}">
-        <h1 class="Wordle-Message" th:text="${lose}"></h1>
-        <h1><a href="/">Опитай пак</a></h1>
-    </div>
+    <h1 th:if="${game.state.name() == 'WIN'}" class="Wordle-Message">Браво! Позна думата с <span th:text="${game.guesses.size()}">6</span> опита 🎉
+        <a href="/">Играй отновo</a>
+    </h1>
+
+    <h1 th:if="${game.state.name() == 'LOSS'}" class="Wordle-Message">Жалко! Не успя да познаеш думата 😢
+        <a href="/">Опитай пак</a>
+    </h1>
+
     <h1 th:if="${error}" th:text="${error}">Невалидна дума</h1>
     <form method="post" th:action="@{/games/{gameId}/guesses(gameId=${game.id})}">
         <div th:each="guess: ${game.guesses}">
@@ -85,9 +83,9 @@
                             th:classappend="${'Wordle-Match_' + guess.matches.charAt(charStat.index)}">a</span>
             </div>
         </div>
-        <div th:unless="(${win} or ${lose})">
-        <input name="guess" maxlength="5" autofocus/>
-        <button>Провери</button>
+        <div th:if="${game.state.name() == 'ONGOING'}">
+            <input name="guess" maxlength="5" autofocus/>
+            <button>Check</button>
         </div>
     </form>
     <div>
